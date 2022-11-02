@@ -10,10 +10,10 @@
     <link rel="stylesheet" href="../css/bootstrap.min.css">
 
     <style>
-        img#home {
-            width: 1250px;
-            margin: 50px 300px;
+        #tablaPersonajes img{
+            height: 175px;
         }
+
     </style>
 </head>
 
@@ -21,7 +21,7 @@
     <header id="menu"></header>
     <div>
         <div id="btnBack"></div>
-        <table class="table table-dark table-striped" border="1" style="margin: 50px 150px;">
+        <table style="width: 1250px; margin:50px 150px" class="table table-dark table-striped" border="1">
             <thead>
                 <tr>
                     <th>Personaje</th>
@@ -38,7 +38,7 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 
 <script>
-    var url = 'https://apiseriespersonajes2022.azurewebsites.net/';
+    var url = 'https://apiseriespersonajes2023.azurewebsites.net/';
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('idserie');
@@ -50,26 +50,30 @@
         cargarPersonajes();
     });
 
+    //FUNCION PARA GENERAR BOTON DE BACK
     function cargarBoton() {
         var a = '<a href="/detalleserie.html?idserie=' + id + '" class="btn btn-primary">Volver</a>';
         $("#btnBack").html(a);
     }
 
+    //FUNCION QUE CARGA PERSONAJES EN UNA TABLA
     function cargarPersonajes() {
         var request = "api/Series/PersonajesSerie/" + id;
         console.log(url + request);
 
+        //HACEMOS LLAMADA A LA API
         $.ajax({
             "url": url + request,
             "method": "GET",
             "dataType": "json",
             success: function (data) {
+                //GENERAMOS LOS REGISTROS DE LA TABLA
                 var html = '';
                 $.each(data, function (index, personaje) {
                     html += '<tr><td>' + personaje.nombre + '</td>';
-                    html += '<td><img src="' + personaje.imagen + '" style="width:50px" /></td></tr >';
+                    html += '<td><img src="' + personaje.imagen + '" /></td></tr >';
                 });
-
+                //INSERTAMOS EN LA TABLA
                 $("#tablaPersonajes").html(html);
             }
         });

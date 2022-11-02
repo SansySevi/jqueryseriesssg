@@ -40,8 +40,6 @@
             <button style="margin:15px" class='btn btn-success' id="btnCrear">Insertar Personaje</button>
         </div>
 
-        <div id="mensaje"></div>
-
     </main>
 
 </body>
@@ -50,19 +48,20 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 
 <script>
-    var url = 'https://apiseriespersonajes2022.azurewebsites.net/';
+    var url = 'https://apiseriespersonajes2023.azurewebsites.net/';
 
     $(document).ready(function () {
         $("#menu").load("menuseries.html");
         cargarSeries();
 
-        
-
+        //FUNCION PARA CREAR UN PERSONAJE
         $("#btnCrear").click(function () {
-            
+            var serie = $("#selectSerie").val();
             var datos = getJsonSeries();
             var request = "api/Personajes";
             console.log(url);
+
+            //POST A LA API
             $.ajax({
                 "url": url + request,
                 "type": "POST",
@@ -70,12 +69,13 @@
                 "contentType": "application/json",
                 success: function () {
                     console.log("Insertado");
-                    $("#mensaje").html("<h2 style='color:blue'>Personaje insertado!</h2>");
+                    //CAMBIAMOS LA LOCALIZACION PATRA REDIRIGIR A PERSONAJES
+                    location.href = '/personajes.html?idserie=' + serie;
                 }
             });
         });
 
-
+        //FUNCION PARA CREAR  EL OBJETO TIPO JSON PARA INSERCION EN LA API
         function getJsonSeries() {
             var nombre = $("#inputNombre").val();
             var imagen = $("#inputImg").val();
@@ -92,21 +92,24 @@
             return dataJson;
         }
 
+        //FUNCION PARA CARGAR LOS PERSONAJES EN EL SELECT
         function cargarSeries() {
             var request = "api/Series";
 
+            //LLAMADA AL API CON UN GET
             $.ajax({
                 "url": this.url + request,
                 "method": "GET",
                 "dataType": "json",
                 success: function (data) {
                     var html = '';
+
+                    //DIBUJAMOS LOS OPTION EN EL SELECT
                     $.each(data, function (index, serie) {
                         html += "<option value='"+ serie.idSerie + "'> " + serie.nombre + "</option>";
                     });
 
                     $("#selectSerie").html(html);
-
                 }
             });
         }

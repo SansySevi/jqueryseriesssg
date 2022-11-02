@@ -57,13 +57,14 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 
 <script>
-    var url = 'https://apiseriespersonajes2022.azurewebsites.net/';
+    var url = 'https://apiseriespersonajes2023.azurewebsites.net/';
 
     $(document).ready(function () {
         $("#menu").load("menuseries.html");
         cargarSeries();
         cargarPersonajes();
 
+        //FUNCION PARA MODIFICAR AL PERSONAJE CUANDO PULSEMOS EL BOTON
         $("#btnUpdate").click(function () {
             var request = "api/Personajes/" + $("#selectPersonaje").val() + "/" + $("#selectSerie").val() ;
             var imgP = $('#selectPersonaje').children('option:selected').attr('data-imagenp');
@@ -72,10 +73,12 @@
             var nombreS = $('#selectSerie').children('option:selected').text();
             var html =""
 
+            //PUT A LA API
             $.ajax({
                 "url": url + request,
                 "type": "PUT",
                 success: function () {
+                    //DIBUJAMOS LAS IMAGENES Y TITULOS QUE APERECEN UNA VEZ SE MODIFIQUE EL PERSONAJE
                     html += "<h2 style='color:red'>"+ nombreS +"</h2>";
                     html += "<img src='"+ imgS +"' />";
                     html += "<h2 style='color:blue'>"+ nombreP +"</h2>";
@@ -85,9 +88,11 @@
             });
         });
 
+        //FUNCION PARA CARGAR LAS SERIES EN EL SELECT
         function cargarSeries() {
             var request = "api/Series";
 
+            //LLAMADA AL API CON UN GET
             $.ajax({
                 "url": this.url + request,
                 "method": "GET",
@@ -95,6 +100,8 @@
                 success: function (data) {
                     var html = '';
                     series = data;
+
+                    //DIBUJAMOS LOS OPTION EN EL SELECT
                     $.each(data, function (index, serie) {
                         html += "<option data-imagens='"+ serie.imagen + "' value='"+ serie.idSerie + "'> " + serie.nombre + "</option>";
                     });
@@ -105,9 +112,11 @@
             });
         }
 
+        //FUNCION PARA CARGAR LOS PERSONAJES EN EL SELECT
         function cargarPersonajes() {
             var request = "api/Personajes";
 
+            //LLAMADA AL API CON UN GET
             $.ajax({
                 "url": this.url + request,
                 "method": "GET",
@@ -115,6 +124,8 @@
                 success: function (data) {
                     var html = '';
                     personajes = data;
+
+                    //DIBUJAMOS LOS OPTION EN EL SELECT
                     $.each(data, function (index, personaje) {
                         html += "<option data-imagenp='"+ personaje.imagen + "' value='"+ personaje.idPersonaje + "'> " + personaje.nombre + "</option>";
                     });

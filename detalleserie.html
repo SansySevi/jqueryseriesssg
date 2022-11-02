@@ -27,7 +27,7 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 
 <script>
-    var url = 'https://apiseriespersonajes2022.azurewebsites.net/';
+    var url = 'https://apiseriespersonajes2023.azurewebsites.net/';
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('idserie');
@@ -37,9 +37,11 @@
         detallesEquipo();
     });
 
+    //FUNCION PARA GENERAR UN CARD CON LA INFORMACION DEL EQUIPO
     function detallesEquipo() {
         var request = "api/Series/" + id;
 
+        //LLAMADA A LA API CON UN GET
         $.ajax({
             "url": url + request,
             "method": "GET",
@@ -47,6 +49,7 @@
             success: function (data) {
                 var html = '';
 
+                //CREAMOS EL CARD
                 html += '<div class="card" style="width:750px; margin:50px auto">';
                 html += '<img src="' + data.imagen + '" class="card-img-top" />';
                 html += '<div class="card-body" style="text-align:center">';
@@ -54,6 +57,7 @@
                 html += '<p class="card-text">IMDB: ' + data.puntuacion + '</p>';
                 html += '<a href="/personajes.html?idserie='+ id +'" class="btn btn-success">Personajes</a></div></div> ';
 
+                //INSERTAMOS EL CARD PARA DIBUJARLO EN LA PAGINA
                 $("#cardSerie").html(html);
             }
         });
