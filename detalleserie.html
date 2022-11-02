@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <style>
+        img#home {
+            width: 1250px;
+            margin: 50px 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="menu"></header>
+    <div id="cardSerie"></div>
+
+</body>
+
+<script src="../js/jquery-3.6.1.min.js"></script>
+<script src="../js/bootstrap.bundle.min.js"></script>
+
+<script>
+    var url = 'https://apiseriespersonajes2022.azurewebsites.net/';
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const id = urlParams.get('idserie');
+
+    $(document).ready(function () {
+        $("#menu").load("menuseries.html");
+        detallesEquipo();
+    });
+
+    function detallesEquipo() {
+        var request = "api/Series/" + id;
+
+        $.ajax({
+            "url": url + request,
+            "method": "GET",
+            "dataType": "json",
+            success: function (data) {
+                var html = '';
+
+                html += '<div class="card" style="width:750px; margin:50px auto">';
+                html += '<img src="' + data.imagen + '" class="card-img-top" />';
+                html += '<div class="card-body" style="text-align:center">';
+                html += '<h5 class="card-title">' + data.nombre + '</h5>';
+                html += '<p class="card-text">IMDB: ' + data.puntuacion + '</p>';
+                html += '<a href="/personajes.html?idserie='+ id +'" class="btn btn-success">Personajes</a></div></div> ';
+
+                $("#cardSerie").html(html);
+            }
+        });
+    }
+</script>
+
+
+</html>

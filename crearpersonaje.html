@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <style>
+        input {
+            text-align: center;
+        }
+
+        div#formulario {
+            margin: 50px 100px;
+        }
+
+        h1 {
+            margin: 5px 150px;
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="menu"></header>
+    <main>
+        <h1>Nuevo Personaje</h1>
+        <div id="formulario">
+            <label>Nombre: </label>
+            <input type="text" class='form-control' id="inputNombre" required /> <br />
+            <label>Imagen: </label>
+            <input type="text" class='form-control' id="inputImg" required /> <br />
+            <label>Serie: </label>
+            <select class="form-select" id="selectSerie" required>
+            </select>
+            <button style="margin:15px" class='btn btn-success' id="btnCrear">Insertar Personaje</button>
+        </div>
+
+        <div id="mensaje"></div>
+
+    </main>
+
+</body>
+
+<script src="../js/jquery-3.6.1.min.js"></script>
+<script src="../js/bootstrap.bundle.min.js"></script>
+
+<script>
+    var url = 'https://apiseriespersonajes2022.azurewebsites.net/';
+
+    $(document).ready(function () {
+        $("#menu").load("menuseries.html");
+        cargarSeries();
+
+        
+
+        $("#btnCrear").click(function () {
+            
+            var datos = getJsonSeries();
+            var request = "api/Personajes";
+            console.log(url);
+            $.ajax({
+                "url": url + request,
+                "type": "POST",
+                "data": datos,
+                "contentType": "application/json",
+                success: function () {
+                    console.log("Insertado");
+                    $("#mensaje").html("<h2 style='color:blue'>Personaje insertado!</h2>");
+                }
+            });
+        });
+
+
+        function getJsonSeries() {
+            var nombre = $("#inputNombre").val();
+            var imagen = $("#inputImg").val();
+            var serie = $("#selectSerie").val();
+
+
+            var personaje = new Object();
+            personaje.idPersonaje = 0;
+            personaje.nombre = nombre;
+            personaje.imagen = imagen;
+            personaje.idSerie = parseInt(serie);
+
+            var dataJson = JSON.stringify(personaje);
+            return dataJson;
+        }
+
+        function cargarSeries() {
+            var request = "api/Series";
+
+            $.ajax({
+                "url": this.url + request,
+                "method": "GET",
+                "dataType": "json",
+                success: function (data) {
+                    var html = '';
+                    $.each(data, function (index, serie) {
+                        html += "<option value='"+ serie.idSerie + "'> " + serie.nombre + "</option>";
+                    });
+
+                    $("#selectSerie").html(html);
+
+                }
+            });
+        }
+    });
+</script>
+
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+<body>
+    <nav class="navbar navbar-expand" style="background-color: #e3f2fd" >
+        <div class="container-fluid">
+            <img style="width: 70px" src="./images/Stranger-Things-Logo-2016.png" />
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crearpersonaje.html">Nuevo personaje</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/modificarpersonaje.html">Modificar personaje</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Series
+                        </a>
+                        <ul class="dropdown-menu" id="listaSeries">
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <script src="../js/jquery-3.6.1.min.js"></script>
+    <script>
+        var url = 'https://apiseriespersonajes2022.azurewebsites.net/';
+
+        $(document).ready(function () {
+            cargarSeries();
+        })
+
+
+        function cargarSeries() {
+            var request = "api/Series";
+
+            $.ajax({
+                "url": url + request,
+                "method": "GET",
+                "dataType": "json",
+                success: function (data) {
+                    var html = '';
+                    $.each(data, function (index, serie) {
+                        html += "<li><a href='/detalleserie.html?idserie=" + serie.idSerie + "''> " + serie.nombre + "<a/><li/>";
+                    });
+
+                    $("#listaSeries").html(html);
+
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

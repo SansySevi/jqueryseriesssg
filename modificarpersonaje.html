@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <style>
+        input {
+            text-align: center;
+        }
+
+        div#formulario {
+            margin: 50px 100px;
+        }
+
+        h1 {
+            margin: 5px 150px;
+            color: blue;
+        }
+
+        div#mensaje {
+            margin: 150px;
+        }
+
+        div#mensaje img {
+            width: 550px;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="menu"></header>
+    <main>
+        <h1>Personajes y Series</h1>
+        <div id="formulario">
+            <label>Seleccione una Serie: </label>
+            <select class="form-select" id="selectSerie" required>
+            </select>
+            <label>Seleccione un Personaje: </label>
+            <select class="form-select" id="selectPersonaje" required>
+            </select>
+            <button style="margin:15px" class='btn btn-success' id="btnUpdate">Guardar Cambios</button>
+        </div>
+
+        <div id="mensaje"></div>
+
+    </main>
+
+</body>
+
+<script src="../js/jquery-3.6.1.min.js"></script>
+<script src="../js/bootstrap.bundle.min.js"></script>
+
+<script>
+    var url = 'https://apiseriespersonajes2022.azurewebsites.net/';
+
+    $(document).ready(function () {
+        $("#menu").load("menuseries.html");
+        cargarSeries();
+        cargarPersonajes();
+
+        $("#btnUpdate").click(function () {
+            var request = "api/Personajes/" + $("#selectPersonaje").val() + "/" + $("#selectSerie").val() ;
+            var imgP = $('#selectPersonaje').children('option:selected').attr('data-imagenp');
+            var imgS = $('#selectSerie').children('option:selected').attr('data-imagens');
+            var nombreP = $('#selectPersonaje').children('option:selected').text();
+            var nombreS = $('#selectSerie').children('option:selected').text();
+            var html =""
+
+            $.ajax({
+                "url": url + request,
+                "type": "PUT",
+                success: function () {
+                    html += "<h2 style='color:red'>"+ nombreS +"</h2>";
+                    html += "<img src='"+ imgS +"' />";
+                    html += "<h2 style='color:blue'>"+ nombreP +"</h2>";
+                    html += "<img src='"+ imgP +"' />";
+                    $("#mensaje").html(html);
+                }
+            });
+        });
+
+        function cargarSeries() {
+            var request = "api/Series";
+
+            $.ajax({
+                "url": this.url + request,
+                "method": "GET",
+                "dataType": "json",
+                success: function (data) {
+                    var html = '';
+                    series = data;
+                    $.each(data, function (index, serie) {
+                        html += "<option data-imagens='"+ serie.imagen + "' value='"+ serie.idSerie + "'> " + serie.nombre + "</option>";
+                    });
+
+                    $("#selectSerie").html(html);
+
+                }
+            });
+        }
+
+        function cargarPersonajes() {
+            var request = "api/Personajes";
+
+            $.ajax({
+                "url": this.url + request,
+                "method": "GET",
+                "dataType": "json",
+                success: function (data) {
+                    var html = '';
+                    personajes = data;
+                    $.each(data, function (index, personaje) {
+                        html += "<option data-imagenp='"+ personaje.imagen + "' value='"+ personaje.idPersonaje + "'> " + personaje.nombre + "</option>";
+                    });
+
+                    $("#selectPersonaje").html(html);
+                }
+            });
+        }
+    });
+</script>
+
+
+</html>
